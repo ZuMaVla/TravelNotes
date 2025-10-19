@@ -3,4 +3,6 @@
     <string name="button_addPlace">Add Place</string>
     <string name="hint_placeTitle">Place Title</string>
     <string name="hint_placeDescription">Place Description</string>
+    <string name="menu_addPlace">Add new travel place</string>
+    <string name="menu_viewMap">View map</string>
 </resources>
