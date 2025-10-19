@@ -15,5 +15,9 @@ class ActionView : AppCompatActivity() {
         setContentView(binding.root)
 //        setSupportActionBar(binding.toolbar)
         presenter = ActionPresenter(this)
+
+        binding.btnAddOrSave.setOnClickListener {
+            presenter.doAddOrSave()
+        }
     }
 }
