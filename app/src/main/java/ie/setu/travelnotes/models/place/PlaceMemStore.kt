@@ -1,5 +1,13 @@
 package ie.setu.travelnotes.models.place
 
+import timber.log.Timber.i
+
+var lastId = 0L
+
+internal fun getId(): Long {
+    return lastId++
+}
+
 class PlaceMemStore  : PlaceStore {
 
     val travelPlaces = ArrayList<PlaceModel>()
@@ -8,15 +16,25 @@ class PlaceMemStore  : PlaceStore {
         return travelPlaces
     }
     override fun findById(id:Long) : PlaceModel?{
-        return travelPlaces[0]
+        val foundPlace: PlaceModel? = travelPlaces.find { it.id == id }
+        return foundPlace
     }
     override fun create(travelPlace: PlaceModel){
+        travelPlace.id = getId()
         travelPlaces.add(travelPlace)
+        logAll()
     }
     override fun update(travelPlace: PlaceModel){
-        travelPlaces[0] = travelPlace
+        var foundPlace: PlaceModel? = travelPlaces.find { p -> p.id == travelPlace.id }
+        if (foundPlace != null) {
+            foundPlace.title = travelPlace.title
+            foundPlace.description = travelPlace.description
+        }
     }
     override fun delete(travelPlace: PlaceModel){
         travelPlaces.remove(travelPlace)
+    }
+    private fun logAll() {
+        travelPlaces.forEach{ i("${it}") }
     }
 }

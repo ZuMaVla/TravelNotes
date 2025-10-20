@@ -1,12 +1,14 @@
 package ie.setu.travelnotes.views.placeaction
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import ie.setu.travelnotes.databinding.ActionPlaceBinding
+import java.time.LocalDate
 
 class ActionView : AppCompatActivity() {
 
-    private lateinit var binding: ActionPlaceBinding
+    lateinit var binding: ActionPlaceBinding
     private lateinit var presenter: ActionPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,9 +17,27 @@ class ActionView : AppCompatActivity() {
         setContentView(binding.root)
 //        setSupportActionBar(binding.toolbar)
         presenter = ActionPresenter(this)
+        val today = LocalDate.now()
+        binding.travelPlaceDate.text = today.toString()
+        binding.travelPlaceTitle.setText("My Place")
+        binding.travelPlaceDescription.setText("Nice place")
 
         binding.btnAddOrSave.setOnClickListener {
             presenter.doAddOrSave()
         }
+        binding.travelPlaceDate.setOnClickListener {
+            val datePicker = DatePickerDialog(
+                this,
+                { _, year, month, day ->
+                    val selectedDate = LocalDate.of(year, month + 1, day)
+                    binding.travelPlaceDate.text = selectedDate.toString()
+                },
+                today.year,
+                today.monthValue - 1,
+                today.dayOfMonth
+            )
+            datePicker.show()
+        }
+
     }
 }

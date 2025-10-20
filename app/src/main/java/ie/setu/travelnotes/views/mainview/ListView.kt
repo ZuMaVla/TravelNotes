@@ -7,12 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.setu.travelnotes.R
 import ie.setu.travelnotes.databinding.MainPageBinding
+import ie.setu.travelnotes.main.MainApp
 import timber.log.Timber.i
 
 class ListView : AppCompatActivity() {
 
+    lateinit var app: MainApp
     private lateinit var binding: MainPageBinding
     private lateinit var presenter: ListPresenter
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +25,10 @@ class ListView : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         presenter = ListPresenter(this)
+        app = application as MainApp
+        val layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewPlaces.layoutManager = layoutManager
+        loadTravelPlaces()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -35,7 +44,13 @@ class ListView : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun loadTravelPlaces() {
+        binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getTravelPlaces())
+        onRefresh()
+    }
+
     fun onRefresh() {
-        // This is where you will update your RecyclerView's adapter
+        binding.recyclerViewPlaces.adapter?.
+        notifyItemRangeChanged(0,presenter.getTravelPlaces().size)
     }
 }
