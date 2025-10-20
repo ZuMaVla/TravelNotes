@@ -43,8 +43,21 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+
+                    <TextView
+                        android:id="@+id/travelPlaceDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:layout_margin="8dp"
+                        android:text="Select date"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:drawableStart="@drawable/ic_calendar"
+                        android:drawablePadding="8dp"
+                        android:textSize="16sp" />
+
                     <EditText
-                        android:id="@+id/placemarkTitle"
+                        android:id="@+id/travelPlaceTitle"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_margin="8dp"
@@ -58,7 +71,7 @@
                         android:textSize="16sp" />
 
                     <EditText
-                        android:id="@+id/placemarkDescription"
+                        android:id="@+id/travelPlaceDescription"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_margin="8dp"

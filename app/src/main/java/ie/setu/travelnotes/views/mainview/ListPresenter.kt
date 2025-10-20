@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import ie.setu.travelnotes.models.place.PlaceModel
 import ie.setu.travelnotes.views.placeaction.ActionView
 import timber.log.Timber.i
 
@@ -19,6 +20,9 @@ class ListPresenter(val view: ListView) {
         i("add button pressed")
         val launcherIntent = Intent(view, ActionView::class.java)
         refreshIntentLauncher.launch(launcherIntent)
+    }
+    fun getTravelPlaces(): List<PlaceModel> {
+        return view.app.travelPlaces.findAll()
     }
 
     private fun registerRefreshCallback() {
