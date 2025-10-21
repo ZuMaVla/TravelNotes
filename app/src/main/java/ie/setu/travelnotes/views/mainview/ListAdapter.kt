@@ -3,6 +3,7 @@ package ie.setu.travelnotes.views.mainview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import ie.setu.travelnotes.databinding.CardPlaceBinding
 import ie.setu.travelnotes.models.place.PlaceModel
 
@@ -16,6 +17,9 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>)
             binding.placeTitle.text = travelPlace.title
             binding.placeDescription.text = travelPlace.description
             binding.placeDate.text = travelPlace.date.toString()
+            Picasso.get()
+                .load(travelPlace.image)
+                .into(binding.imageIcon)
         }
     }
 
