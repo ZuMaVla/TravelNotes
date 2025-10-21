@@ -1,9 +1,12 @@
 package ie.setu.travelnotes.views.placeaction
 
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.picasso.Picasso
 import ie.setu.travelnotes.databinding.ActionPlaceBinding
+import timber.log.Timber.i
 import java.time.LocalDate
 
 class ActionView : AppCompatActivity() {
@@ -21,7 +24,9 @@ class ActionView : AppCompatActivity() {
         binding.travelPlaceDate.text = today.toString()
         binding.travelPlaceTitle.setText("My Place")
         binding.travelPlaceDescription.setText("Nice place")
-
+        binding.chooseImage.setOnClickListener {
+            presenter.doSelectImage()
+        }
         binding.btnAddOrSave.setOnClickListener {
             presenter.doAddOrSave()
         }
@@ -39,5 +44,13 @@ class ActionView : AppCompatActivity() {
             datePicker.show()
         }
 
+    }
+
+    fun updateImage(image: Uri){
+        i("Image updated")
+        Picasso.get()
+            .load(image)
+            .into(binding.travelPlaceImage)
+//        binding.chooseImage.setText(R.string.change_placemark_image)
     }
 }

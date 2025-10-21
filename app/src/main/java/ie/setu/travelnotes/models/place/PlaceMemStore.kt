@@ -29,6 +29,8 @@ class PlaceMemStore  : PlaceStore {
         if (foundPlace != null) {
             foundPlace.title = travelPlace.title
             foundPlace.description = travelPlace.description
+            foundPlace.image = travelPlace.image
+            foundPlace.date = travelPlace.date
         }
     }
     override fun delete(travelPlace: PlaceModel){
