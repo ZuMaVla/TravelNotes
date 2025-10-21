@@ -9,5 +9,9 @@
     <string name="button_addImage"> Add Image </string>
     <string name="select_place_image">Select place image</string>
     <string name="change_place_image">Place photo</string>
+    <string name="menu_editPlace">Edit existing travel place</string>
+    <string name="menu_userLogin">Login here</string>
+    <string name="menu_deletePlace">Delete this travel place</string>
+    <string name="menu_openPlace">Open travel place for detailed view</string>
 
 </resources>

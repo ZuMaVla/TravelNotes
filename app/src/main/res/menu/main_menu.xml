@@ -10,7 +10,7 @@
     <item
         android:id="@+id/item_edit"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/menu_viewMap"
+        android:title="@string/menu_editPlace"
         app:showAsAction="always"
         android:visible="true"/>
 
@@ -24,8 +24,22 @@
     <item
         android:id="@+id/item_login"
         android:icon="@android:drawable/ic_lock_idle_lock"
-        android:title="@string/menu_viewMap"
+        android:title="@string/menu_userLogin"
         app:showAsAction="always"
         android:visible="true"/>
+
+    <item
+        android:id="@+id/item_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/menu_deletePlace"
+        app:showAsAction="always"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/item_open"
+        android:icon="@drawable/ic_menu_open"
+        android:title="@string/menu_openPlace"
+        app:showAsAction="always"
+        android:visible="false"/>
 
 </menu>
