@@ -5,6 +5,8 @@ interface PlaceStore {
     fun findById(id:Long) : PlaceModel?
     fun create(travelPlace: PlaceModel)
     fun update(travelPlace: PlaceModel)
-    fun delete(travelPlace: PlaceModel)
-
+    fun delete(travelPlace: PlaceModel) : Boolean
 }
+
+
+

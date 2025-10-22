@@ -33,8 +33,14 @@ class PlaceMemStore  : PlaceStore {
             foundPlace.date = travelPlace.date
         }
     }
-    override fun delete(travelPlace: PlaceModel){
+    override fun delete(travelPlace: PlaceModel) : Boolean {
+        val size = travelPlaces.size
         travelPlaces.remove(travelPlace)
+        if (travelPlaces.size != size - 1) {
+            return false
+        } else {
+            return true
+        }
     }
     private fun logAll() {
         travelPlaces.forEach{ i("${it}") }

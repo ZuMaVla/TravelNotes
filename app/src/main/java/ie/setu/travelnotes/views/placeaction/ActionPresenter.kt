@@ -1,7 +1,9 @@
 package ie.setu.travelnotes.views.placeaction
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +17,32 @@ class ActionPresenter(private val view: ActionView) {
     var travelPlace = PlaceModel()
     var app: MainApp = view.application as MainApp
     private lateinit var imageIntentLauncher : ActivityResultLauncher<PickVisualMediaRequest>
+    var edit = false
+
+    init {
+        if (view.intent.hasExtra("place_edit")) {
+            edit = true
+//            do not work with API 33+ (Android 13+)
+//            travelPlace = view.intent.extras?.getParcelable("place_edit")!!
+            travelPlace = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                view.intent.getParcelableExtra("place_edit", PlaceModel::class.java)!!
+            } else {
+                @Suppress("DEPRECATION")
+                view.intent.getParcelableExtra<PlaceModel>("place_edit")!!
+            }
+
+
+        }
+        else {
+            val today = LocalDate.now()
+            travelPlace.date = today
+            travelPlace.title = "My Place"
+            travelPlace.description ="Nice place"
+            travelPlace.image = Uri.EMPTY
+        }
+        view.showPlace(travelPlace)
+        registerImagePickerCallback()
+    }
 
     fun doSelectImage() {
         i("Select image")
@@ -24,16 +52,15 @@ class ActionPresenter(private val view: ActionView) {
         imageIntentLauncher.launch(request)
     }
 
-    init {
-        registerImagePickerCallback()
-    }
-
     fun doAddOrSave() {
         travelPlace.title = view.binding.travelPlaceTitle.text.toString()
         travelPlace.description = view.binding.travelPlaceDescription.text.toString()
         travelPlace.date = LocalDate.parse(view.binding.travelPlaceDate.text.toString())
-
-        app.travelPlaces.create(travelPlace)
+        if (edit) {
+            app.travelPlaces.update(travelPlace)
+        } else {
+            app.travelPlaces.create(travelPlace)
+        }
         i("add or save pressed")
         view.setResult(Activity.RESULT_OK)
         view.finish()

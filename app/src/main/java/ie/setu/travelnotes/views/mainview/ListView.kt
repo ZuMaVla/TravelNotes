@@ -12,7 +12,7 @@ import ie.setu.travelnotes.main.MainApp
 class ListView : AppCompatActivity(), PlaceListener {
 
     lateinit var app: MainApp
-    private lateinit var binding: MainPageBinding
+    lateinit var binding: MainPageBinding
     private lateinit var presenter: ListPresenter
     var menu: Menu? = null
 
@@ -38,11 +38,14 @@ class ListView : AppCompatActivity(), PlaceListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_add -> { presenter.doAddPlace() }
+            R.id.item_edit -> { presenter.doEditPlace() }
+            R.id.item_delete -> { presenter.doDeletePlace() }
+
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadTravelPlaces() {
+    fun loadTravelPlaces() {
         binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getTravelPlaces(), this, presenter)
         onRefresh()
     }
