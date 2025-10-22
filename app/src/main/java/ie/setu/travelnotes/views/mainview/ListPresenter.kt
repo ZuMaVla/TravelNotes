@@ -23,6 +23,18 @@ class ListPresenter(val view: ListView) {
         val launcherIntent = Intent(view, ActionView::class.java)
         refreshIntentLauncher.launch(launcherIntent)
     }
+    private fun registerRefreshCallback() {
+        refreshIntentLauncher =
+            view.registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    selectedPosition = RecyclerView.NO_POSITION
+                    setMenuStandard()
+                    view.onRefresh()
+                }
+            }
+    }
 
     fun doPlaceClick(position: Int) {
         selectedPosition = RecyclerView.NO_POSITION
@@ -49,17 +61,6 @@ class ListPresenter(val view: ListView) {
         return view.app.travelPlaces.findAll()
     }
 
-    private fun registerRefreshCallback() {
-        refreshIntentLauncher =
-            view.registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    setMenuStandard()
-                    view.onRefresh()
-                }
-            }
-    }
 
     internal fun setMenuStandard() {
         i("Menu checked")
@@ -81,6 +82,25 @@ class ListPresenter(val view: ListView) {
         view.showEditOption(true)
         view.showDeleteOption(true)
         view.showOpenOption(true)
+    }
+
+    fun doEditPlace() {
+        i("edit button pressed")
+        val chosenPlace = getTravelPlaces()[selectedPosition]
+        val launcherIntent = Intent(view, ActionView::class.java)
+        launcherIntent.putExtra("place_edit", chosenPlace)
+        refreshIntentLauncher.launch(launcherIntent)
+    }
+
+    fun doDeletePlace() {
+        i("delete button pressed")
+        val chosenPlace = getTravelPlaces()[selectedPosition]
+        if (view.app.travelPlaces.delete(chosenPlace)) {
+            view.loadTravelPlaces()
+            setMenuStandard()
+            selectedPosition = RecyclerView.NO_POSITION
+        }
+
     }
 
 }

@@ -13,11 +13,16 @@ interface PlaceListener {
     fun onPlaceLongClick(position: Int)
 }
 
-class ListAdapter(
-    private val travelPlaces: List<PlaceModel>,
-    private val listener: PlaceListener,
-    private val presenter: ListPresenter
-) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
+class ListAdapter(private val travelPlaces: List<PlaceModel>,
+                  private val listener: PlaceListener,
+                  private val presenter: ListPresenter) :
+    RecyclerView.Adapter<ListAdapter.ViewHolder>() {
+
+    var places: List<PlaceModel> = emptyList()
+    init {
+        places = travelPlaces
+    }
+
 
     inner class ViewHolder(private val binding: CardPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -38,12 +43,12 @@ class ListAdapter(
             }
         }
 
-        fun bind(travelPlace: PlaceModel, position: Int) {
-            binding.placeTitle.text = travelPlace.title
-            binding.placeDescription.text = travelPlace.description
-            binding.placeDate.text = travelPlace.date.toString()
+        fun bind(place: PlaceModel, position: Int) {
+            binding.placeTitle.text = place.title
+            binding.placeDescription.text = place.description
+            binding.placeDate.text = place.date.toString()
             Picasso.get()
-                .load(travelPlace.image)
+                .load(place.image)
                 .into(binding.imageIcon)
 
             if (position == presenter.getSelectedPosition()) {
@@ -62,8 +67,9 @@ class ListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(travelPlaces[position], position) // Correctly pass the position
+        holder.bind(places[position], position) // Correctly pass the position
     }
 
-    override fun getItemCount() = travelPlaces.size
+    override fun getItemCount() = places.size
+
 }
