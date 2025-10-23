@@ -1,6 +1,7 @@
 package ie.setu.travelnotes.views.placeaction
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +11,7 @@ import com.squareup.picasso.Picasso
 import ie.setu.travelnotes.R
 import ie.setu.travelnotes.databinding.ActionPlaceBinding
 import ie.setu.travelnotes.models.place.PlaceModel
+import ie.setu.travelnotes.views.map.MapView
 import timber.log.Timber.i
 import java.time.LocalDate
 
@@ -29,6 +31,10 @@ class ActionView : AppCompatActivity() {
         binding.chooseImage.setOnClickListener {
             presenter.doSelectImage()
         }
+        binding.placeLocation.setOnClickListener {
+            presenter.doSelectLocation()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,7 +83,6 @@ class ActionView : AppCompatActivity() {
             )
             datePicker.show()
         }
-
     }
 
 }

@@ -6,16 +6,19 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.RecyclerView
 import ie.setu.travelnotes.models.place.PlaceModel
+import ie.setu.travelnotes.views.map.MapView
 import ie.setu.travelnotes.views.placeaction.ActionView
 import timber.log.Timber.i
 
 class ListPresenter(val view: ListView) {
     
     private lateinit var refreshIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private var selectedPosition: Int = RecyclerView.NO_POSITION
 
     init {
         registerRefreshCallback()
+        registerMapCallback()
     }
 
     fun doAddPlace() {
@@ -23,6 +26,14 @@ class ListPresenter(val view: ListView) {
         val launcherIntent = Intent(view, ActionView::class.java)
         refreshIntentLauncher.launch(launcherIntent)
     }
+
+    fun doShowMap() {
+        i("Show Map button pressed")
+        val launcherIntent = Intent(view, MapView::class.java)
+        launcherIntent.putParcelableArrayListExtra("places", ArrayList(getTravelPlaces()))
+        mapIntentLauncher.launch(launcherIntent)
+    }
+
     private fun registerRefreshCallback() {
         refreshIntentLauncher =
             view.registerForActivityResult(
@@ -34,6 +45,13 @@ class ListPresenter(val view: ListView) {
                     view.onRefresh()
                 }
             }
+    }
+
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            view.registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()
+            ) { }
     }
 
     fun doPlaceClick(position: Int) {
