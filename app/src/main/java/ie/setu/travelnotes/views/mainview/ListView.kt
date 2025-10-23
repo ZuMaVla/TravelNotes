@@ -40,7 +40,7 @@ class ListView : AppCompatActivity(), PlaceListener {
             R.id.item_add -> { presenter.doAddPlace() }
             R.id.item_edit -> { presenter.doEditPlace() }
             R.id.item_delete -> { presenter.doDeletePlace() }
-
+            R.id.item_map -> { presenter.doShowMap() } // Add map handler
         }
         return super.onOptionsItemSelected(item)
     }
