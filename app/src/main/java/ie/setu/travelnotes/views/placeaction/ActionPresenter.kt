@@ -7,8 +7,10 @@ import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import ie.setu.travelnotes.main.MainApp
 import ie.setu.travelnotes.models.place.PlaceModel
+import ie.setu.travelnotes.views.map.MapView
 import timber.log.Timber.i
 import java.time.LocalDate
 
@@ -17,6 +19,7 @@ class ActionPresenter(private val view: ActionView) {
     var travelPlace = PlaceModel()
     var app: MainApp = view.application as MainApp
     private lateinit var imageIntentLauncher : ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     var edit = false
 
     init {
@@ -42,6 +45,7 @@ class ActionPresenter(private val view: ActionView) {
         }
         view.showPlace(travelPlace)
         registerImagePickerCallback()
+        registerMapCallback()
     }
 
     fun doSelectImage() {
@@ -50,6 +54,14 @@ class ActionPresenter(private val view: ActionView) {
             .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
             .build()
         imageIntentLauncher.launch(request)
+    }
+    fun doSelectLocation() {
+        i("Set Location Pressed")
+        val launcherIntent = Intent(view, MapView::class.java)
+        launcherIntent.putExtra("lat", travelPlace.lat)
+        launcherIntent.putExtra("lng", travelPlace.lng)
+        launcherIntent.putExtra("zoom", 15f) // Set a default zoom level
+        mapIntentLauncher.launch(launcherIntent)
     }
 
     fun doAddOrSave() {
@@ -81,6 +93,29 @@ class ActionPresenter(private val view: ActionView) {
             catch(e:Exception){
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun registerMapCallback() {
+        mapIntentLauncher = view.registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            result ->
+            when (result.resultCode) {
+                AppCompatActivity.RESULT_OK -> {
+                    if (result.data != null) {
+                        i("Got Location ${result.data.toString()}")
+                        val lat = result.data!!.getDoubleExtra("lat", 0.0)
+                        val lng = result.data!!.getDoubleExtra("lng", 0.0)
+                        //val location = result.data!!.extras?.getParcelable<Location>("location")!!
+                        i("Location == $lat, $lng")
+                        travelPlace.lat = lat
+                        travelPlace.lng = lng
+                    } // end of if
+                }
+                AppCompatActivity.RESULT_CANCELED -> { } else -> { }
+            }
+            i("Map loaded")
         }
     }
 }
