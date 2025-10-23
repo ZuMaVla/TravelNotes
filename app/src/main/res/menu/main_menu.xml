@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/menu_addPlace"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/item_edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/menu_editPlace"
+        app:showAsAction="always"
+        android:visible="true"/>
+
+    <item
+        android:id="@+id/item_map"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="@string/menu_viewMap"
+        app:showAsAction="always"
+        android:visible="true"/>
+
+    <item
+        android:id="@+id/item_login"
+        android:icon="@android:drawable/ic_lock_idle_lock"
+        android:title="@string/menu_userLogin"
+        app:showAsAction="always"
+        android:visible="true"/>
+
+    <item
+        android:id="@+id/item_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/menu_deletePlace"
+        app:showAsAction="always"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/item_open"
+        android:icon="@drawable/ic_menu_open"
+        android:title="@string/menu_openPlace"
+        app:showAsAction="always"
+        android:visible="false"/>
+
+</menu>

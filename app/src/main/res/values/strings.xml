@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Travel Notes</string>
+    <string name="button_addPlace">Add Place</string>
+    <string name="hint_placeTitle">Place Title</string>
+    <string name="hint_placeDescription">Place Description</string>
+    <string name="menu_addPlace">Add new travel place</string>
+    <string name="menu_viewMap">View map</string>
+    <string name="button_addImage"> Add Image </string>
+    <string name="select_place_image">Select place image</string>
+    <string name="change_place_image">Change place image</string>
+    <string name="menu_editPlace">Edit existing travel place</string>
+    <string name="menu_userLogin">Login here</string>
+    <string name="menu_deletePlace">Delete this travel place</string>
+    <string name="menu_openPlace">Open travel place for detailed view</string>
+    <string name="menu_save">Save travel place</string>
+    <string name="menu_cancel">Cancel/return</string>
+    <string name="button_location">Set Location</string>
+    <string name="title_activity_map">Pick place location</string>
+    <string name="title_show_map">Your travel places</string>
+
 </resources>

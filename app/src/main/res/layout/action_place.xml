@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".travelplace.PlaceView">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:fitsSystemWindows="true"
+                app:elevation="0dip"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbarAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:titleTextColor="@color/colorPrimary" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appBarLayout"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/travelPlaceDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:layout_margin="8dp"
+                        android:text="Select date"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:drawableStart="@drawable/ic_calendar"
+                        android:drawablePadding="8dp"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/travelPlaceTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_margin="8dp"
+                        android:autofillHints="hint"
+                        android:hint="@string/hint_placeTitle"
+                        android:inputType="text"
+                        android:maxLength="25"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/travelPlaceDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_margin="8dp"
+                        android:autofillHints="hint"
+                        android:hint="@string/hint_placeDescription"
+                        android:inputType="text"
+                        android:maxLength="25"
+                        android:maxLines="1"
+                        android:padding="8dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/chooseImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@color/colorAccent"
+                        android:importantForAccessibility="no"
+                        android:padding="8dp"
+                        android:text="@string/button_addImage"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        tools:ignore="VisualLintButtonSize" />
+
+                    <ImageView
+                        android:id="@+id/travelPlaceImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        app:srcCompat="@mipmap/ic_launcher"
+                        tools:ignore="ImageContrastCheck" />
+
+                    <Button
+                        android:id="@+id/placeLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@color/colorAccent"
+                        android:padding="8dp"
+                        android:stateListAnimator="@null"
+                        android:text="@string/button_location"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
