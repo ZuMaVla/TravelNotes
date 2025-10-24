@@ -1,6 +1,6 @@
 package ie.setu.travelnotes.views.mainview
 
-import android.graphics.Color
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +22,6 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
     init {
         places = travelPlaces
     }
-
 
     inner class ViewHolder(private val binding: CardPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -51,10 +50,16 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
                 .load(place.image)
                 .into(binding.imageIcon)
 
+            // Use theme-aware colors
+            val highlightColor = TypedValue()
+            itemView.context.theme.resolveAttribute(android.R.attr.colorControlHighlight, highlightColor, true)
+            val defaultColor = TypedValue()
+            itemView.context.theme.resolveAttribute(android.R.attr.colorBackground, defaultColor, true)
+
             if (position == presenter.getSelectedPosition()) {
-                binding.root.setBackgroundColor(Color.LTGRAY)
+                binding.root.setBackgroundColor(highlightColor.data)
             } else {
-                binding.root.setBackgroundColor(Color.WHITE)
+                binding.root.setBackgroundColor(defaultColor.data)
             }
         }
     }
@@ -67,9 +72,8 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(places[position], position) // Correctly pass the position
+        holder.bind(places[position], position)
     }
 
     override fun getItemCount() = places.size
-
 }
