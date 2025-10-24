@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.Marker
 import ie.setu.travelnotes.R
 import ie.setu.travelnotes.databinding.ActivityMapBinding
 
-class MapView : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
+class MapView : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener, GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var binding: ActivityMapBinding
     private lateinit var presenter: MapPresenter
@@ -52,6 +52,11 @@ class MapView : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragL
     override fun onMapReady(googleMap: GoogleMap) {
         presenter.doConfigureMap(googleMap)
         googleMap.setOnMarkerDragListener(this)
+        googleMap.setOnInfoWindowClickListener(this)
+    }
+
+    override fun onInfoWindowClick(marker: Marker) {
+        presenter.doInfoWindowClick(marker)
     }
 
     override fun onMarkerDrag(marker: Marker) {}
