@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ie.setu.travelnotes.models.place.PlaceModel
 import ie.setu.travelnotes.views.map.MapView
 import ie.setu.travelnotes.views.placeaction.ActionView
+import ie.setu.travelnotes.views.placedetails.PlaceView
 import timber.log.Timber.i
 
 class ListPresenter(val view: ListView) {
@@ -56,18 +57,20 @@ class ListPresenter(val view: ListView) {
 
     fun doPlaceClick(position: Int) {
         selectedPosition = RecyclerView.NO_POSITION
-        val place = getTravelPlaces()[position]
-        i("place clicked: ${place.title}")
-        // In the future, you can launch a details/edit screen here.
         setMenuStandard()
         view.onRefresh()
+        doOpenPlace(position)
     }
 
     fun doPlaceLongClick(position: Int) {
-        selectedPosition = position
-        i("place LONG clicked and selected: ${getTravelPlaces()[position].title}")
-        // Tell the view to refresh the list to apply the highlight
-        setMenuPlaceSelected()
+        if (selectedPosition == position) {
+            selectedPosition = RecyclerView.NO_POSITION
+            setMenuStandard()
+        }
+        else {
+            selectedPosition = position
+            setMenuPlaceSelected()
+        }
         view.onRefresh()
     }
 
@@ -118,7 +121,14 @@ class ListPresenter(val view: ListView) {
             setMenuStandard()
             selectedPosition = RecyclerView.NO_POSITION
         }
+    }
 
+    fun doOpenPlace(position: Int) {
+        i("open button pressed")
+        val chosenPlace = getTravelPlaces()[position]
+        val launcherIntent = Intent(view, PlaceView::class.java)
+        launcherIntent.putExtra("details_place", chosenPlace)
+        refreshIntentLauncher.launch(launcherIntent)
     }
 
 }
