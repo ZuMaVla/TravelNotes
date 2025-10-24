@@ -19,7 +19,7 @@
                 android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:background="?attr/colorPrimary"
                 android:fitsSystemWindows="true"
                 app:elevation="0dip"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -28,7 +28,7 @@
                     android:id="@+id/toolbarAdd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:titleTextColor="@color/colorPrimary" />
+                    app:titleTextColor="?attr/colorOnPrimary" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -51,7 +51,6 @@
                         android:padding="8dp"
                         android:layout_margin="8dp"
                         android:text="Select date"
-                        android:textColor="@color/colorPrimaryDark"
                         android:drawableStart="@drawable/ic_calendar"
                         android:drawablePadding="8dp"
                         android:textSize="16sp" />
@@ -67,7 +66,6 @@
                         android:maxLength="25"
                         android:maxLines="1"
                         android:padding="8dp"
-                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
 
                     <EditText
@@ -81,7 +79,6 @@
                         android:maxLength="25"
                         android:maxLines="1"
                         android:padding="8dp"
-                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp" />
 
                     <Button
@@ -89,11 +86,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:background="@color/colorAccent"
                         android:importantForAccessibility="no"
                         android:padding="8dp"
                         android:text="@string/button_addImage"
-                        android:textColor="@color/colorPrimary"
                         android:textSize="16sp"
                         tools:ignore="VisualLintButtonSize" />
 
@@ -110,11 +105,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:background="@color/colorAccent"
                         android:padding="8dp"
                         android:stateListAnimator="@null"
                         android:text="@string/button_location"
-                        android:textColor="@color/colorPrimary"
                         android:textSize="16sp"/>
 
                 </LinearLayout>

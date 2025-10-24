@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import ie.setu.travelnotes.models.place.PlaceModel
+import ie.setu.travelnotes.views.placedetails.PlaceView
 
 class MapPresenter(private val view: MapView) {
 
@@ -32,18 +33,17 @@ class MapPresenter(private val view: MapView) {
 
     fun doConfigureMap(mMap: GoogleMap) {
         if (mode == "all") {
-            // Show All Travel Places Mode
             val boundsBuilder = LatLngBounds.Builder()
             places.forEach {
                 val loc = LatLng(it.lat, it.lng)
                 val options = MarkerOptions().title(it.title).position(loc)
-                mMap.addMarker(options)
+                val marker = mMap.addMarker(options)
+                marker?.tag = it.id // Tag with ID
                 boundsBuilder.include(loc)
             }
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100))
         }
         else {
-            // Single Travel Place Mode; mode remains default ("one")
             val location = LatLng(lat, lng)
             val options = MarkerOptions()
                 .title("Travel Place")
@@ -55,15 +55,25 @@ class MapPresenter(private val view: MapView) {
         }
     }
 
+    fun doInfoWindowClick(marker: Marker) {
+        val placeId = marker.tag as Long
+        val place = places.find { it.id == placeId }
+        if (place != null) {
+            val intent = Intent(view, PlaceView::class.java)
+            intent.putExtra("details_place", place)
+            view.startActivity(intent)
+        }
+    }
+
     fun doMarkerDrag(marker: Marker) {
-        if (mode == "one") { // Only allow drag in single location mode
+        if (mode == "one") {
             lat = marker.position.latitude
             lng = marker.position.longitude
         }
     }
 
     fun doSave() {
-        if (mode == "one") { // Only save in single location mode
+        if (mode == "one") {
             val resultIntent = Intent()
             resultIntent.putExtra("lat", lat)
             resultIntent.putExtra("lng", lng)
