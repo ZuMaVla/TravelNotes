@@ -1,12 +1,9 @@
 package ie.setu.travelnotes.models.place
 
 interface PlaceStore {
-    fun findAll(): List<PlaceModel>
-    fun findById(id:Long) : PlaceModel?
-    fun create(travelPlace: PlaceModel)
-    fun update(travelPlace: PlaceModel)
-    fun delete(travelPlace: PlaceModel) : Boolean
+    fun findAllPlaces(userId: Long): List<PlaceModel>
+    fun findPlaceById(userId: Long, placeId: Long): PlaceModel?
+    fun createPlace(place: PlaceModel)
+    fun updatePlace(userId: Long, place: PlaceModel)
+    fun deletePlace(userId: Long, place: PlaceModel)
 }
-
-
-

@@ -65,17 +65,25 @@ class ActionPresenter(private val view: ActionView) {
     }
 
     fun doAddOrSave() {
-        travelPlace.title = view.binding.travelPlaceTitle.text.toString()
-        travelPlace.description = view.binding.travelPlaceDescription.text.toString()
-        travelPlace.date = LocalDate.parse(view.binding.travelPlaceDate.text.toString())
-        if (edit) {
-            app.travelPlaces.update(travelPlace)
-        } else {
-            app.travelPlaces.create(travelPlace)
+        val currentUser = app.currentUser
+        if (currentUser != null) {
+            travelPlace.title = view.binding.travelPlaceTitle.text.toString()
+            travelPlace.description = view.binding.travelPlaceDescription.text.toString()
+            travelPlace.date = LocalDate.parse(view.binding.travelPlaceDate.text.toString())
+
+            val resultIntent = Intent()
+            if (edit) {
+                app.travelPlaces.updatePlace(currentUser.id, travelPlace.copy())
+                resultIntent.putExtra("operation", "edit")
+            } else {
+                travelPlace.userId = currentUser.id
+                app.travelPlaces.createPlace(travelPlace.copy())
+                resultIntent.putExtra("operation", "add")
+            }
+            i("add or save pressed")
+            view.setResult(Activity.RESULT_OK, resultIntent)
+            view.finish()
         }
-        i("add or save pressed")
-        view.setResult(Activity.RESULT_OK)
-        view.finish()
     }
 
     private fun registerImagePickerCallback() {

@@ -19,5 +19,8 @@
     <string name="title_show_map">Your travel places</string>
     <string name="place_image">Travel place image</string>
     <string name="delete_comment">Delete this comment</string>
+    <string name="menu_showMap">Show all places on map</string>
+    <string name="menu_login">Sign up/in</string>
+    <string name="menu_logout">Sign out</string>
 
 </resources>
