@@ -25,22 +25,31 @@ class PlacePresenter(val view: PlaceView) {
     fun getComments(): ArrayList<CommentModel> = travelPlace.comments
 
     fun doAddComment(commentText: String) {
-        val newComment = CommentModel(author = "Author", text = commentText)
-        travelPlace.comments.add(newComment)
-        app.travelPlaces.update(travelPlace)
-        view.onCommentAdded()
+        val currentUser = app.currentUser
+        if (currentUser != null) {
+            val newComment = CommentModel(author = "Author", text = commentText)
+            travelPlace.comments.add(newComment)
+            app.travelPlaces.updatePlace(currentUser.id, travelPlace.copy())
+            view.onCommentAdded()
+        }
     }
 
     fun doDeleteComment(position: Int) {
-        travelPlace.comments.removeAt(position)
-        app.travelPlaces.update(travelPlace)
-        view.onCommentDeleted(position)
+        val currentUser = app.currentUser
+        if (currentUser != null) {
+            travelPlace.comments.removeAt(position)
+            app.travelPlaces.updatePlace(currentUser.id, travelPlace.copy())
+            view.onCommentDeleted(position)
+        }
     }
 
     fun doSetRating(rating: Int) {
-        travelPlace.rating = rating.toDouble()
-        app.travelPlaces.update(travelPlace)
-        view.onRatingSet(travelPlace.rating)
+        val currentUser = app.currentUser
+        if (currentUser != null) {
+            travelPlace.rating = rating.toDouble()
+            app.travelPlaces.updatePlace(currentUser.id, travelPlace.copy())
+            view.onRatingSet(travelPlace.rating)
+        }
     }
 
     fun configureMap(view: PlaceView, googleMap: GoogleMap) {

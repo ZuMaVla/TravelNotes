@@ -26,6 +26,9 @@
             android:name=".views.placedetails.PlaceView"
             android:exported="false" />
         <activity
+            android:name=".views.login.LoginView"
+            android:exported="false" />
+        <activity
             android:name=".views.placeaction.ActionView"
             android:exported="false" />
         <activity

@@ -18,11 +18,6 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
                   private val presenter: ListPresenter) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
-    var places: List<PlaceModel> = emptyList()
-    init {
-        places = travelPlaces
-    }
-
     inner class ViewHolder(private val binding: CardPlaceBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -72,8 +67,8 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(places[position], position)
+        holder.bind(travelPlaces[position], position)
     }
 
-    override fun getItemCount() = places.size
+    override fun getItemCount() = travelPlaces.size
 }
