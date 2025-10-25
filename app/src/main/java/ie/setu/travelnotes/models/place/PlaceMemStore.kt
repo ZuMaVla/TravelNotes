@@ -24,26 +24,16 @@ class PlaceMemStore  : PlaceStore {
         travelPlaces.add(travelPlace)
         logAll()
     }
-    override fun update(travelPlace: PlaceModel){
-        var foundPlace: PlaceModel? = travelPlaces.find { p -> p.id == travelPlace.id }
-        if (foundPlace != null) {
-            foundPlace.title = travelPlace.title
-            foundPlace.description = travelPlace.description
-            foundPlace.image = travelPlace.image
-            foundPlace.date = travelPlace.date
-            foundPlace.lat = travelPlace.lat
-            foundPlace.lng = travelPlace.lng
-            foundPlace.rating = travelPlace.rating
+    override fun update(travelPlace: PlaceModel) {
+        val index = travelPlaces.indexOfFirst { it.id == travelPlace.id }
+        if (index != -1) {
+            travelPlaces[index] = travelPlace
         }
     }
     override fun delete(travelPlace: PlaceModel) : Boolean {
         val size = travelPlaces.size
         travelPlaces.remove(travelPlace)
-        if (travelPlaces.size != size - 1) {
-            return false
-        } else {
-            return true
-        }
+        return size == travelPlaces.size + 1
     }
     private fun logAll() {
         travelPlaces.forEach{ i("${it}") }
