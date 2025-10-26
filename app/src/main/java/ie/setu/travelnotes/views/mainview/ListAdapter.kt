@@ -41,6 +41,7 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
             binding.placeTitle.text = place.title
             binding.placeDescription.text = place.description
             binding.placeDate.text = place.date.toString()
+            binding.placeRating.text = place.rating.toString() // Set the rating text
             Picasso.get()
                 .load(place.image)
                 .into(binding.imageIcon)

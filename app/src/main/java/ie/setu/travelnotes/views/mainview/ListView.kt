@@ -3,6 +3,7 @@ package ie.setu.travelnotes.views.mainview
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,19 @@ class ListView : AppCompatActivity(), PlaceListener {
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerViewPlaces.layoutManager = layoutManager
         binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getTravelPlaces(), this, presenter)
+
+        binding.fabFilterSort.setOnClickListener {
+            presenter.doFilterSort(binding.fabFilterSort as View)
+        }
+    }
+    fun showFilteredList() {
+        binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getFilteredPlaces(), this, presenter)
+        onRefresh()
+    }
+
+    fun showFullList() {
+        binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getTravelPlaces(), this, presenter)
+        onRefresh()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -97,6 +111,10 @@ class ListView : AppCompatActivity(), PlaceListener {
 
     fun showAddOption(show: Boolean) {
         menu?.findItem(R.id.item_add)?.isVisible = show
+    }
+
+    fun showFilterSortOption(show: Boolean) {
+        if (show) binding.fabFilterSort.show() else binding.fabFilterSort.hide()
     }
 
     override fun onPlaceClick(position: Int) {

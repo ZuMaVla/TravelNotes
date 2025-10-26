@@ -2,9 +2,12 @@ package ie.setu.travelnotes.views.mainview
 
 import android.app.Activity
 import android.content.Intent
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import ie.setu.travelnotes.R
 import ie.setu.travelnotes.models.place.PlaceModel
 import ie.setu.travelnotes.views.login.LoginView
 import ie.setu.travelnotes.views.map.MapView
@@ -18,7 +21,9 @@ class ListPresenter(val view: ListView) {
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private lateinit var loginIntentLauncher : ActivityResultLauncher<Intent>
     var travelPlaces = ArrayList<PlaceModel>()
+    private var filteredPlaces = ArrayList<PlaceModel>()
     private var selectedPosition: Int = RecyclerView.NO_POSITION
+    private var isFiltered = false
 
     init {
         loadPlaces()
@@ -26,8 +31,12 @@ class ListPresenter(val view: ListView) {
         registerMapCallback()
         registerLoginCallback()
     }
+    fun getFilteredPlaces(): List<PlaceModel> {
+        return filteredPlaces
+    }
 
     private fun loadPlaces() {
+        isFiltered = false // Reset filter on load
         val currentUser = view.app.currentUser
         if (currentUser != null) {
             travelPlaces.clear()
@@ -59,11 +68,38 @@ class ListPresenter(val view: ListView) {
     fun doLogout() {
         i("logout button pressed")
         view.app.logout()
-        loadPlaces() // This will clear the list
+        loadPlaces() // This will clear the list and reset the filter flag
         view.onRefresh()
-        setMenuStandard()
+        refreshMenu()
     }
 
+    fun doFilterSort(anchor: View) {
+        i("Filter/Sort FAB pressed")
+        val popup = PopupMenu(anchor.context, anchor)
+        popup.menuInflater.inflate(R.menu.filter_menu, popup.menu)
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.filter_top5 -> filteredPlaces = ArrayList(getTop5())
+                R.id.filter_lowest5 -> filteredPlaces = ArrayList(getLowest5())
+                R.id.sort_date_asc -> filteredPlaces = ArrayList(sortByDateAscending())
+                R.id.sort_date_desc -> filteredPlaces = ArrayList(sortByDateDescending())
+                R.id.sort_rating_asc -> filteredPlaces = ArrayList(sortByRatingAscending())
+                R.id.sort_rating_desc -> filteredPlaces = ArrayList(sortByRatingDescending())
+            }
+            
+            isFiltered = item.itemId != R.id.show_all
+
+            if (isFiltered) {
+                view.showFilteredList()
+            } else {
+                view.showFullList()
+            }
+            refreshMenu()
+            true
+        }
+        popup.show()
+    }
     private fun registerRefreshCallback() {
         refreshIntentLauncher =
             view.registerForActivityResult(
@@ -78,8 +114,8 @@ class ListPresenter(val view: ListView) {
                     } else {
                         view.onRefresh(selectedPosition)
                     }
-
-                    setMenuStandard()
+                    
+                    refreshMenu()
                     selectedPosition = RecyclerView.NO_POSITION // Reset position at the end
                 }
             }
@@ -100,28 +136,29 @@ class ListPresenter(val view: ListView) {
                 if (result.resultCode == Activity.RESULT_OK) {
                     loadPlaces()
                     view.onRefresh()
-                    setMenuStandard()
+                    refreshMenu()
                 }
             }
     }
 
     fun doPlaceClick(position: Int) {
         selectedPosition = RecyclerView.NO_POSITION
-        setMenuStandard()
+        refreshMenu()
         view.onRefresh()
         doOpenPlace(position)
     }
 
     fun doPlaceLongClick(position: Int) {
-        if (selectedPosition == position) {
-            selectedPosition = RecyclerView.NO_POSITION
-            setMenuStandard()
+        if (!isFiltered) { // Only allow contextual menu if not filtered
+            if (selectedPosition == position) {
+                selectedPosition = RecyclerView.NO_POSITION
+                refreshMenu()
+            } else {
+                selectedPosition = position
+                setMenuPlaceSelected()
+            }
+            view.onRefresh()
         }
-        else {
-            selectedPosition = position
-            setMenuPlaceSelected()
-        }
-        view.onRefresh()
     }
 
     fun getSelectedPosition(): Int {
@@ -131,14 +168,19 @@ class ListPresenter(val view: ListView) {
     fun getTravelPlaces(): List<PlaceModel> {
         return travelPlaces
     }
+    
+    fun refreshMenu() {
+        setMenuStandard()
+    }
 
-    internal fun setMenuStandard() {
+    fun setMenuStandard() {
         i("Menu checked")
         if (view.app.currentUser != null) {
             // Logged in state
             val isListEmpty = travelPlaces.isEmpty()
             view.showMapOption(!isListEmpty)
-            view.showAddOption(true)
+            view.showFilterSortOption(!isListEmpty)
+            view.showAddOption(!isFiltered) // Disable add when filtered
             view.showEditOption(false)
             view.showDeleteOption(false)
             view.showOpenOption(false)
@@ -147,6 +189,7 @@ class ListPresenter(val view: ListView) {
         } else {
             // Logged out state
             view.showMapOption(false)
+            view.showFilterSortOption(false)
             view.showAddOption(false)
             view.showEditOption(false)
             view.showDeleteOption(false)
@@ -156,7 +199,7 @@ class ListPresenter(val view: ListView) {
         }
     }
 
-    internal fun setMenuPlaceSelected() {
+    private fun setMenuPlaceSelected() {
         i("Menu checked")
         view.showMapOption(false)
         view.showAddOption(false)
@@ -181,9 +224,10 @@ class ListPresenter(val view: ListView) {
         if (currentUser != null) {
             val chosenPlace = travelPlaces[selectedPosition]
             view.app.travelPlaces.deletePlace(currentUser.id, chosenPlace)
+            val positionToDelete = selectedPosition
             loadPlaces()
-            view.onPlaceDeleted(selectedPosition)
-            setMenuStandard()
+            view.onPlaceDeleted(positionToDelete)
+            refreshMenu()
             selectedPosition = RecyclerView.NO_POSITION
         }
     }
@@ -195,5 +239,11 @@ class ListPresenter(val view: ListView) {
         launcherIntent.putExtra("details_place", chosenPlace)
         refreshIntentLauncher.launch(launcherIntent)
     }
+    private fun getTop5() = travelPlaces.sortedByDescending { it.rating }.take(5)
+    private fun getLowest5() = travelPlaces.sortedBy { it.rating }.take(5)
+    private fun sortByDateAscending() = travelPlaces.sortedBy { it.date }
+    private fun sortByDateDescending() = travelPlaces.sortedByDescending { it.date }
+    private fun sortByRatingAscending() = travelPlaces.sortedBy { it.rating }
+    private fun sortByRatingDescending() = travelPlaces.sortedByDescending { it.rating }
 
 }
