@@ -13,7 +13,7 @@ interface PlaceListener {
     fun onPlaceLongClick(position: Int)
 }
 
-class ListAdapter(private val travelPlaces: List<PlaceModel>,
+class ListAdapter(private var travelPlaces: List<PlaceModel>,
                   private val listener: PlaceListener,
                   private val presenter: ListPresenter) :
     RecyclerView.Adapter<ListAdapter.ViewHolder>() {
@@ -41,6 +41,7 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
             binding.placeTitle.text = place.title
             binding.placeDescription.text = place.description
             binding.placeDate.text = place.date.toString()
+            binding.placeRating.text = place.rating.toString()
             Picasso.get()
                 .load(place.image)
                 .into(binding.imageIcon)
@@ -71,4 +72,9 @@ class ListAdapter(private val travelPlaces: List<PlaceModel>,
     }
 
     override fun getItemCount() = travelPlaces.size
+
+    fun updateData(newList: List<PlaceModel>) {
+        travelPlaces = newList
+        notifyDataSetChanged()
+    }
 }

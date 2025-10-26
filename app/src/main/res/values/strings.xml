@@ -22,5 +22,13 @@
     <string name="menu_showMap">Show all places on map</string>
     <string name="menu_login">Sign up/in</string>
     <string name="menu_logout">Sign out</string>
+    <string name="sort_by_rating">Sort by Rating ↑</string>
+    <string name="sort_by_rating_">Sort by Rating ↓</string>
+    <string name="sort_by_date_">Sort by Date ↓</string>
+    <string name="sort_by_date">Sort by Date ↑</string>
+    <string name="lowest_5_rated">Lowest 5 rated</string>
+    <string name="top_5_rated">Top 5 rated</string>
+    <string name="full_list">Remove filtering/sorting</string>
+    <string name="image_of_the_place">Image of the place</string>
 
 </resources>

@@ -1,63 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:elevation="2dp">
+    app:cardElevation="2dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Image Icon on the far right -->
         <ImageView
             android:id="@+id/imageIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="36pt"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/change_place_image"
-            android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/image_of_the_place"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-            android:id="@+id/placeTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/imageIcon"
-            android:layout_marginEnd="8dp"
-            android:text="Paris"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/placeDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/placeTitle"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="4dp"
-            android:layout_toStartOf="@+id/imageIcon"
-            android:layout_marginEnd="8dp"
-            android:text="Visited Louvre"
-            android:textSize="14sp" />
-
+        <!-- Date, to the left of the icon -->
         <TextView
             android:id="@+id/placeDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/placeDescription"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="4dp"
-            android:layout_toStartOf="@+id/imageIcon"
-            android:layout_marginEnd="8dp"
-            android:text="2025-04-12"
-            android:textSize="12sp" />
+            android:layout_marginEnd="16dp"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/imageIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2025-04-12" />
 
-    </RelativeLayout>
+        <!-- Rating, below the date -->
+        <TextView
+            android:id="@+id/placeRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            app:drawableStartCompat="@drawable/ic_action_rate"
+            app:layout_constraintStart_toStartOf="@+id/placeDate"
+            app:layout_constraintTop_toBottomOf="@+id/placeDate"
+            tools:text="4.5" />
+
+        <!-- Title, on the left -->
+        <TextView
+            android:id="@+id/placeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/placeDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Place Title Here" />
+
+        <!-- Description, below the title -->
+        <TextView
+            android:id="@+id/placeDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:layout_constraintEnd_toEndOf="@+id/placeTitle"
+            app:layout_constraintStart_toStartOf="@+id/placeTitle"
+            app:layout_constraintTop_toBottomOf="@+id/placeTitle"
+            tools:text="A short description of the place" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>

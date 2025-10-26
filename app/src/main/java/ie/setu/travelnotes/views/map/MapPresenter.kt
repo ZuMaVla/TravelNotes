@@ -34,7 +34,7 @@ class MapPresenter(private val view: MapView) {
     fun doConfigureMap(mMap: GoogleMap) {
         if (mode == "all") {
             val boundsBuilder = LatLngBounds.Builder()
-            places.forEach {
+            places.forEach { 
                 val loc = LatLng(it.lat, it.lng)
                 val options = MarkerOptions().title(it.title).position(loc)
                 val marker = mMap.addMarker(options)
@@ -83,6 +83,7 @@ class MapPresenter(private val view: MapView) {
     }
 
     fun doCancel() {
+        view.setResult(Activity.RESULT_OK) // Always return OK to trigger refresh
         view.finish()
     }
 }
