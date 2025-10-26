@@ -251,12 +251,19 @@ class ListPresenter(val view: ListView) {
         refreshIntentLauncher.launch(launcherIntent)
     }
 
+    // Step 1: Request confirmation from the View
     fun doDeletePlace() {
-        i("delete button pressed")
+        if (selectedPosition != RecyclerView.NO_POSITION) {
+            view.showDeleteConfirmationDialog(selectedPosition)
+        }
+    }
+
+    // Step 2: The View calls this after user confirms
+    fun doConfirmDelete(position: Int) {
         val currentUser = view.app.currentUser
         if (currentUser != null) {
-            val chosenPlace = if (isFiltered) filteredPlaces[selectedPosition] else travelPlaces[selectedPosition]
-            view.app.travelPlaces.deletePlace(currentUser.id, chosenPlace)
+            val placeToDelete = if (isFiltered) filteredPlaces[position] else travelPlaces[position]
+            view.app.travelPlaces.deletePlace(currentUser.id, placeToDelete)
             val positionToDelete = selectedPosition
             loadPlaces()
             view.onPlaceDeleted(positionToDelete)

@@ -1,5 +1,6 @@
 package ie.setu.travelnotes.views.mainview
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -31,7 +32,6 @@ class ListView : AppCompatActivity(), PlaceListener {
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerViewPlaces.layoutManager = layoutManager
 
-        // Create adapter ONCE and pass it the initial list
         adapterListToDisplay = ListAdapter(presenter.getTravelPlaces(), this, presenter)
         binding.recyclerViewPlaces.adapter = adapterListToDisplay
 
@@ -66,6 +66,17 @@ class ListView : AppCompatActivity(), PlaceListener {
             R.id.item_logout -> { presenter.doLogout() }
         }
         return super.onOptionsItemSelected(item)
+    }
+    
+    fun showDeleteConfirmationDialog(position: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Place")
+            .setMessage("Are you sure you want to delete this travel note?")
+            .setPositiveButton("Yes") { _, _ ->
+                presenter.doConfirmDelete(position)
+            }
+            .setNegativeButton("No", null)
+            .show()
     }
 
     // For general refreshes (e.g. highlight changes)

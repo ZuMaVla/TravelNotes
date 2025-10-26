@@ -1,7 +1,6 @@
 package ie.setu.travelnotes.views.placeaction
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.result.ActivityResultLauncher
@@ -61,17 +60,29 @@ class ActionPresenter(private val view: ActionView) {
     }
 
     fun doAddOrSave() {
+        val title = view.binding.travelPlaceTitle.text.toString()
+        val description = view.binding.travelPlaceDescription.text.toString()
+
+        if (title.length < 3 || title.length > 30) {
+            view.showToast("Title must be between 3 and 30 characters")
+            return
+        }
+        if (description.isEmpty()) {
+            view.showToast("Description cannot be empty")
+            return
+        }
+
         val currentUser = app.currentUser
         if (currentUser != null) {
-            travelPlace.title = view.binding.travelPlaceTitle.text.toString()
-            travelPlace.description = view.binding.travelPlaceDescription.text.toString()
+            travelPlace.title = title
+            travelPlace.description = description
             travelPlace.date = LocalDate.parse(view.binding.travelPlaceDate.text.toString())
 
             val resultIntent = Intent()
             if (edit) {
                 app.travelPlaces.updatePlace(currentUser.id, travelPlace.copy())
                 resultIntent.putExtra("operation", "edit")
-                resultIntent.putExtra("place_edited", travelPlace.copy()) // Add the edited place
+                resultIntent.putExtra("place_edited", travelPlace.copy()) 
             } else {
                 travelPlace.userId = currentUser.id
                 app.travelPlaces.createPlace(travelPlace.copy())

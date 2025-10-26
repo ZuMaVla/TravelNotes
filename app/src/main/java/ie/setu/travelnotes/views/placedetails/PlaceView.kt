@@ -1,11 +1,13 @@
 package ie.setu.travelnotes.views.placedetails
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.NumberPicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -93,6 +95,7 @@ class PlaceView : AppCompatActivity(), CommentListener {
     }
 
     fun onCommentAdded() {
+        hideKeyboard()
         binding.commentInput.text.clear()
         binding.commentsRecycler.adapter?.notifyItemInserted(presenter.getComments().size)
     }
@@ -107,6 +110,11 @@ class PlaceView : AppCompatActivity(), CommentListener {
 
     override fun onDeleteCommentClick(position: Int) {
         presenter.doDeleteComment(position)
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
     }
 
     private fun setupMap() {
