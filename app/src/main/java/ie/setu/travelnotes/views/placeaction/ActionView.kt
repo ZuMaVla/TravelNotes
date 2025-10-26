@@ -44,7 +44,7 @@ class ActionView : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_save -> presenter.doAddOrSave()
-            R.id.item_cancel -> finish()
+            R.id.item_return -> finish()
         }
         return super.onOptionsItemSelected(item)
     }

@@ -10,7 +10,7 @@ import ie.setu.travelnotes.models.place.PlaceModel
 
 
 class PlacePresenter(val view: PlaceView) {
-    private var travelPlace = PlaceModel()
+    var travelPlace = PlaceModel()
     var app: MainApp = view.application as MainApp
     init {
         travelPlace = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -27,7 +27,7 @@ class PlacePresenter(val view: PlaceView) {
     fun doAddComment(commentText: String) {
         val currentUser = app.currentUser
         if (currentUser != null) {
-            val newComment = CommentModel(author = "Author", text = commentText)
+            val newComment = CommentModel(author = currentUser.name, text = commentText)
             travelPlace.comments.add(newComment)
             app.travelPlaces.updatePlace(currentUser.id, travelPlace.copy())
             view.onCommentAdded()

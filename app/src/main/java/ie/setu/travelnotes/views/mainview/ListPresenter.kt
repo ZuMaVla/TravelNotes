@@ -43,6 +43,7 @@ class ListPresenter(val view: ListView) {
             travelPlaces.addAll(view.app.travelPlaces.findAllPlaces(currentUser.id))
         } else {
             travelPlaces.clear()
+            filteredPlaces.clear()
         }
     }
 
@@ -54,8 +55,9 @@ class ListPresenter(val view: ListView) {
 
     fun doShowMap() {
         i("Show Map button pressed")
+        val listToShow = if (isFiltered) ArrayList(filteredPlaces) else travelPlaces
         val launcherIntent = Intent(view, MapView::class.java)
-        launcherIntent.putParcelableArrayListExtra("places", travelPlaces)
+        launcherIntent.putParcelableArrayListExtra("places", listToShow)
         mapIntentLauncher.launch(launcherIntent)
     }
 
@@ -107,12 +109,31 @@ class ListPresenter(val view: ListView) {
             ) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val operation = result.data?.getStringExtra("operation")
-                    loadPlaces() // Sync with the master list
-
+                    
                     if (operation == "add") {
+                        loadPlaces()
                         view.onPlaceAdded()
-                    } else {
-                        view.onRefresh(selectedPosition)
+                    } else if (operation == "edit") {
+                        val editedPlace = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                            result.data?.getParcelableExtra("place_edited", PlaceModel::class.java)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            result.data?.getParcelableExtra<PlaceModel>("place_edited")
+                        }
+                        if (editedPlace != null) {
+                            // Efficiently update the local lists
+                            val indexInMaster = travelPlaces.indexOfFirst { it.id == editedPlace.id }
+                            if (indexInMaster != -1) {
+                                travelPlaces[indexInMaster] = editedPlace
+                            }
+                            if (isFiltered) {
+                                val indexInFiltered = filteredPlaces.indexOfFirst { it.id == editedPlace.id }
+                                if (indexInFiltered != -1) {
+                                    filteredPlaces[indexInFiltered] = editedPlace
+                                }
+                            }
+                            view.onRefresh(selectedPosition)
+                        }
                     }
                     
                     refreshMenu()
@@ -125,7 +146,12 @@ class ListPresenter(val view: ListView) {
         mapIntentLauncher =
             view.registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult()
-            ) { }
+            ) { result ->
+                 if (result.resultCode == Activity.RESULT_OK) {
+                    loadPlaces()
+                    view.onRefresh()
+                }
+            }
     }
 
     private fun registerLoginCallback() {
@@ -134,7 +160,9 @@ class ListPresenter(val view: ListView) {
                 ActivityResultContracts.StartActivityForResult()
             ) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
+                    isFiltered = false
                     loadPlaces()
+                    view.showFullList()
                     view.onRefresh()
                     refreshMenu()
                 }
@@ -142,10 +170,15 @@ class ListPresenter(val view: ListView) {
     }
 
     fun doPlaceClick(position: Int) {
-        selectedPosition = RecyclerView.NO_POSITION
-        refreshMenu()
-        view.onRefresh()
-        doOpenPlace(position)
+        // A click can either open a place for details, or clear a selection
+        if (selectedPosition == RecyclerView.NO_POSITION) {
+            selectedPosition = position
+            doOpenPlace(position)
+        } else {
+            selectedPosition = RecyclerView.NO_POSITION
+            refreshMenu()
+            view.onRefresh()
+        }
     }
 
     fun doPlaceLongClick(position: Int) {
@@ -212,7 +245,7 @@ class ListPresenter(val view: ListView) {
 
     fun doEditPlace() {
         i("edit button pressed")
-        val chosenPlace = travelPlaces[selectedPosition]
+        val chosenPlace = if (isFiltered) filteredPlaces[selectedPosition] else travelPlaces[selectedPosition]
         val launcherIntent = Intent(view, ActionView::class.java)
         launcherIntent.putExtra("place_edit", chosenPlace)
         refreshIntentLauncher.launch(launcherIntent)
@@ -222,7 +255,7 @@ class ListPresenter(val view: ListView) {
         i("delete button pressed")
         val currentUser = view.app.currentUser
         if (currentUser != null) {
-            val chosenPlace = travelPlaces[selectedPosition]
+            val chosenPlace = if (isFiltered) filteredPlaces[selectedPosition] else travelPlaces[selectedPosition]
             view.app.travelPlaces.deletePlace(currentUser.id, chosenPlace)
             val positionToDelete = selectedPosition
             loadPlaces()
@@ -234,7 +267,7 @@ class ListPresenter(val view: ListView) {
 
     fun doOpenPlace(position: Int) {
         i("open button pressed")
-        val chosenPlace = travelPlaces[position]
+        val chosenPlace = if (isFiltered) filteredPlaces[position] else travelPlaces[position]
         val launcherIntent = Intent(view, PlaceView::class.java)
         launcherIntent.putExtra("details_place", chosenPlace)
         refreshIntentLauncher.launch(launcherIntent)

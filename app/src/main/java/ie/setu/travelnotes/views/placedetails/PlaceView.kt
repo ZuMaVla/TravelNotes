@@ -1,6 +1,7 @@
 package ie.setu.travelnotes.views.placedetails
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
@@ -67,7 +68,11 @@ class PlaceView : AppCompatActivity(), CommentListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_cancel -> {
+            R.id.item_return -> {
+                val resultIntent = Intent()
+                resultIntent.putExtra("operation", "edit")
+                resultIntent.putExtra("place_edited", presenter.travelPlace.copy()) // Use .copy()
+                setResult(RESULT_OK, resultIntent)
                 finish()
             }
         }

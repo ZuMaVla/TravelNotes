@@ -16,6 +16,7 @@ class ListView : AppCompatActivity(), PlaceListener {
     lateinit var app: MainApp
     lateinit var binding: MainPageBinding
     private lateinit var presenter: ListPresenter
+    private lateinit var adapterListToDisplay: ListAdapter
     var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,20 +30,22 @@ class ListView : AppCompatActivity(), PlaceListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerViewPlaces.layoutManager = layoutManager
-        binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getTravelPlaces(), this, presenter)
+
+        // Create adapter ONCE and pass it the initial list
+        adapterListToDisplay = ListAdapter(presenter.getTravelPlaces(), this, presenter)
+        binding.recyclerViewPlaces.adapter = adapterListToDisplay
 
         binding.fabFilterSort.setOnClickListener {
             presenter.doFilterSort(binding.fabFilterSort as View)
         }
     }
+
     fun showFilteredList() {
-        binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getFilteredPlaces(), this, presenter)
-        onRefresh()
+        adapterListToDisplay.updateData(presenter.getFilteredPlaces())
     }
 
     fun showFullList() {
-        binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getTravelPlaces(), this, presenter)
-        onRefresh()
+        adapterListToDisplay.updateData(presenter.getTravelPlaces())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -67,22 +70,24 @@ class ListView : AppCompatActivity(), PlaceListener {
 
     // For general refreshes (e.g. highlight changes)
     fun onRefresh() {
-        binding.recyclerViewPlaces.adapter?.notifyDataSetChanged()
+        adapterListToDisplay.notifyDataSetChanged()
     }
 
     // For targeted edit refreshes
     fun onRefresh(position: Int) {
         if (position != RecyclerView.NO_POSITION) {
-            binding.recyclerViewPlaces.adapter?.notifyItemChanged(position)
+            adapterListToDisplay.notifyItemChanged(position)
         }
     }
 
     fun onPlaceAdded() {
-        binding.recyclerViewPlaces.adapter?.notifyItemInserted(presenter.getTravelPlaces().size - 1)
+        adapterListToDisplay.notifyItemInserted(presenter.getTravelPlaces().size - 1)
     }
 
     fun onPlaceDeleted(position: Int) {
-        binding.recyclerViewPlaces.adapter?.notifyItemRemoved(position)
+        if (position != RecyclerView.NO_POSITION) {
+            adapterListToDisplay.notifyItemRemoved(position)
+        }
     }
 
     fun showLoginOption(show: Boolean) {

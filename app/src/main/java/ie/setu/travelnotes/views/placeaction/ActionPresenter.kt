@@ -25,16 +25,12 @@ class ActionPresenter(private val view: ActionView) {
     init {
         if (view.intent.hasExtra("place_edit")) {
             edit = true
-//            do not work with API 33+ (Android 13+)
-//            travelPlace = view.intent.extras?.getParcelable("place_edit")!!
             travelPlace = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 view.intent.getParcelableExtra("place_edit", PlaceModel::class.java)!!
             } else {
                 @Suppress("DEPRECATION")
                 view.intent.getParcelableExtra<PlaceModel>("place_edit")!!
             }
-
-
         }
         else {
             val today = LocalDate.now()
@@ -75,6 +71,7 @@ class ActionPresenter(private val view: ActionView) {
             if (edit) {
                 app.travelPlaces.updatePlace(currentUser.id, travelPlace.copy())
                 resultIntent.putExtra("operation", "edit")
+                resultIntent.putExtra("place_edited", travelPlace.copy()) // Add the edited place
             } else {
                 travelPlace.userId = currentUser.id
                 app.travelPlaces.createPlace(travelPlace.copy())
@@ -115,7 +112,6 @@ class ActionPresenter(private val view: ActionView) {
                         i("Got Location ${result.data.toString()}")
                         val lat = result.data!!.getDoubleExtra("lat", 0.0)
                         val lng = result.data!!.getDoubleExtra("lng", 0.0)
-                        //val location = result.data!!.extras?.getParcelable<Location>("location")!!
                         i("Location == $lat, $lng")
                         travelPlace.lat = lat
                         travelPlace.lng = lng
