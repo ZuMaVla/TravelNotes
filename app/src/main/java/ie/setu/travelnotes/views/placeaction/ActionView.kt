@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
 import ie.setu.travelnotes.R
@@ -44,7 +45,7 @@ class ActionView : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_save -> presenter.doAddOrSave()
-            R.id.item_cancel -> finish()
+            R.id.item_return -> finish()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -81,6 +82,10 @@ class ActionView : AppCompatActivity() {
             )
             datePicker.show()
         }
+    }
+
+    fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
 }

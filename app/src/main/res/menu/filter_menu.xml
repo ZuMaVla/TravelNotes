@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/show_all" android:title="@string/full_list" />
+    <item android:id="@+id/filter_top5" android:title="@string/top_5_rated" />
+    <item android:id="@+id/filter_lowest5" android:title="@string/lowest_5_rated" />
+    <item android:id="@+id/sort_date_asc" android:title="@string/sort_by_date" />
+    <item android:id="@+id/sort_date_desc" android:title="@string/sort_by_date_" />
+    <item android:id="@+id/sort_rating_asc" android:title="@string/sort_by_rating" />
+    <item android:id="@+id/sort_rating_desc" android:title="@string/sort_by_rating_" />
+</menu>

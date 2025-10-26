@@ -1,8 +1,10 @@
 package ie.setu.travelnotes.views.mainview
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +17,7 @@ class ListView : AppCompatActivity(), PlaceListener {
     lateinit var app: MainApp
     lateinit var binding: MainPageBinding
     private lateinit var presenter: ListPresenter
+    private lateinit var adapterListToDisplay: ListAdapter
     var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +31,21 @@ class ListView : AppCompatActivity(), PlaceListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerViewPlaces.layoutManager = layoutManager
-        binding.recyclerViewPlaces.adapter = ListAdapter(presenter.getTravelPlaces(), this, presenter)
+
+        adapterListToDisplay = ListAdapter(presenter.getTravelPlaces(), this, presenter)
+        binding.recyclerViewPlaces.adapter = adapterListToDisplay
+
+        binding.fabFilterSort.setOnClickListener {
+            presenter.doFilterSort(binding.fabFilterSort as View)
+        }
+    }
+
+    fun showFilteredList() {
+        adapterListToDisplay.updateData(presenter.getFilteredPlaces())
+    }
+
+    fun showFullList() {
+        adapterListToDisplay.updateData(presenter.getTravelPlaces())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,25 +67,38 @@ class ListView : AppCompatActivity(), PlaceListener {
         }
         return super.onOptionsItemSelected(item)
     }
+    
+    fun showDeleteConfirmationDialog(position: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Place")
+            .setMessage("Are you sure you want to delete this travel note?")
+            .setPositiveButton("Yes") { _, _ ->
+                presenter.doConfirmDelete(position)
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
 
     // For general refreshes (e.g. highlight changes)
     fun onRefresh() {
-        binding.recyclerViewPlaces.adapter?.notifyDataSetChanged()
+        adapterListToDisplay.notifyDataSetChanged()
     }
 
     // For targeted edit refreshes
     fun onRefresh(position: Int) {
         if (position != RecyclerView.NO_POSITION) {
-            binding.recyclerViewPlaces.adapter?.notifyItemChanged(position)
+            adapterListToDisplay.notifyItemChanged(position)
         }
     }
 
     fun onPlaceAdded() {
-        binding.recyclerViewPlaces.adapter?.notifyItemInserted(presenter.getTravelPlaces().size - 1)
+        adapterListToDisplay.notifyItemInserted(presenter.getTravelPlaces().size - 1)
     }
 
     fun onPlaceDeleted(position: Int) {
-        binding.recyclerViewPlaces.adapter?.notifyItemRemoved(position)
+        if (position != RecyclerView.NO_POSITION) {
+            adapterListToDisplay.notifyItemRemoved(position)
+        }
     }
 
     fun showLoginOption(show: Boolean) {
@@ -97,6 +127,10 @@ class ListView : AppCompatActivity(), PlaceListener {
 
     fun showAddOption(show: Boolean) {
         menu?.findItem(R.id.item_add)?.isVisible = show
+    }
+
+    fun showFilterSortOption(show: Boolean) {
+        if (show) binding.fabFilterSort.show() else binding.fabFilterSort.hide()
     }
 
     override fun onPlaceClick(position: Int) {

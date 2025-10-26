@@ -44,7 +44,7 @@ class MapView : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerDragL
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_save -> presenter.doSave()
-            R.id.item_cancel -> presenter.doCancel()
+            R.id.item_return -> presenter.doCancel()
         }
         return super.onOptionsItemSelected(item)
     }

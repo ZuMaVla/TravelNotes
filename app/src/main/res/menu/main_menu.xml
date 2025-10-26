@@ -17,19 +17,19 @@
         android:id="@+id/item_edit"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/menu_editPlace"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/item_delete"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/menu_deletePlace"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/item_open"
         android:icon="@android:drawable/ic_menu_view"
         android:title="@string/menu_openPlace"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <group android:checkableBehavior="single">
         <item
