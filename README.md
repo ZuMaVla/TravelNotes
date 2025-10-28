@@ -31,7 +31,7 @@
  This application is built following the **Model-View-Presenter (MVP)** architectural pattern to ensure a clean separation of concerns, making the codebase scalable and easy to maintain.
 ​
  - **Model**: The data layer is handled by a `JSONStore` which acts as a local data source, persisting all user and place data to a single JSON file on the device. `PlaceStore` and `UserStore` interfaces define the contract for data operations.
- - **View**: The views are implemented as Android `Activity` classes (e.g., `ListView`, `PlaceView`, `ActionView`). They are responsible for displaying data and relaying user actions to the presenter. They are designed to be as "dumb" as possible.
+ - **View**: The views are implemented as Android Activity classes (e.g., `ListView`, `PlaceView`, `ActionView`). They are responsible for displaying data and relaying user actions to the presenter. They are designed to be as "dumb" as possible.
  - **Presenter**: The presenters (e.g., `ListPresenter`, `PlacePresenter`) contain all the business logic. They react to user input from the View, interact with the Model, and tell the View what to display.
 ​
  ## Technical Details
@@ -41,7 +41,7 @@
  - **Target Android Version:** Android 14 (API Level 34)
  - **UI**: Built with modern Android UI components, including `RecyclerView`, `CardView`, `ConstraintLayout`, and Google Material Components like `FloatingActionButton` and `AppBarLayout`.
  - **Data Persistence**: Data is serialized to and from a local `travel_notes_.json` file using the [Gson](https://github.com/google/gson) library.
- - **Image Loading**: Images are loaded efficiently using the [Picasso](https://square.github.io/picasso/) library.
+ - **Image Loading**: Images are displayed efficiently using the [Picasso](https://square.github.io/picasso/) library.
  - **Logging**: [Timber](https://github.com/ajalt/timberkt) is used for clear and organised logging.
  - **Maps**: [Google Maps Platform](https://developers.google.com/maps/documentation/android-sdk) is used for all location and mapping features.
 ​
