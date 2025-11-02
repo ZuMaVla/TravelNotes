@@ -34,8 +34,8 @@ class ActionPresenter(private val view: ActionView) {
         else {
             val today = LocalDate.now()
             travelPlace.date = today
-            travelPlace.title = "My Place"
-            travelPlace.description ="Nice place"
+            travelPlace.title = ""
+            travelPlace.description =""
             travelPlace.image = Uri.EMPTY
         }
         view.showPlace(travelPlace)
